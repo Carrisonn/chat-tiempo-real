@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html">
+  <meta name="description" content="Chat En Tiempo Real">
+  <link rel="icon" href="./icons/web-icon.svg" type="image/svg+xml">
+  <title>Chat en Tiempo Real</title>
+  <link rel="preload" href="./css/modern-normalize.css" as="style">
+  <link rel="stylesheet" href="./css/modern-normalize.css">
+  <link rel="preload" href="./css/styles.css" as="style">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script type="module" src="./js/index.js"></script>
+</head>
+
+<body>
+  <main class="container">
+    <section id="chat">
+      <ul id="messages"></ul>
+      <form id="form">
+        <input type="text" name="message" id="input" placeholder="Escribe un mensaje" autocomplete="off" required>
+        <button type="submit" id="button">Enviar</button>
+      </form>
+    </section>
+  </main>
+</body>
+
+</html>
