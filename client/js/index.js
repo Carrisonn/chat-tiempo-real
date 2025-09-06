@@ -3,18 +3,20 @@ import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 const socket = io({
   auth: {
     userName: getUserName(),
-    userColor: getRandomColor(),
-    serverOffset: 0
+    serverOffset: 0,
   }
 })
 
+const $numberOfUsers = document.querySelector('#number-of-users')
 const $messages = document.querySelector('#messages')
 const $input = document.querySelector('#input')
 const $form = document.querySelector('#form')
 $form.addEventListener('submit', handleSubmit)
 
+if (Notification.permission !== "granted") Notification.requestPermission()
+
 // Functions
-function getUserName () {
+function getUserName() {
   const userLogged = localStorage.getItem('userName')
   if (userLogged) return userLogged
 
@@ -30,13 +32,7 @@ function getUserName () {
   return userName
 }
 
-function getRandomColor () {
-  const colors = ['#90c6f1ff', '#c7acf1ff', '#bfeeb4ff', '#ec9b9bff', '#e0a8ebff', '#f3e7a6ff']
-  const randomColor = colors[Math.floor(Math.random() * colors.length)]
-  return randomColor
-}
-
-function handleSubmit (event) {
+function handleSubmit(event) {
   event.preventDefault()
 
   const inputValue = $input.value.trim()
@@ -47,22 +43,26 @@ function handleSubmit (event) {
 }
 
 // Socket Events
-socket.on('connection', userName => {
+socket.on('connection', (userName, usersConnected) => {
   const $userConnected = document.createElement('p')
   $userConnected.classList.add('user-state')
   $userConnected.textContent = `${userName} se ha conectado`
+  $numberOfUsers.textContent = usersConnected
   $messages.append($userConnected)
+  $messages.scrollTop = $messages.scrollHeight
 })
 
-socket.on('disconnection', userName => {
+socket.on('disconnection', (userName, usersConnected) => {
   const $userDesconnected = document.createElement('p')
   $userDesconnected.classList.add('user-state')
   $userDesconnected.textContent = `${userName} salió del chat`
+  $numberOfUsers.textContent = usersConnected
   $messages.append($userDesconnected)
+  $messages.scrollTop = $messages.scrollHeight
 })
 
 socket.on('message', userInfo => {
-  const { user, userColor, lastRowId, messageTime, message } = userInfo
+  const { user, userColor, lastRowId, messageTime, messageDate, message } = userInfo
 
   const $listMessage = document.createElement('li')
   $listMessage.style.backgroundColor = userColor
@@ -79,14 +79,15 @@ socket.on('message', userInfo => {
   $user.classList.add('message-detail')
   $user.textContent = user
 
-  const $messageTime = document.createElement('p')
-  $messageTime.classList.add('message-detail')
-  $messageTime.textContent = messageTime
+  const $messageDetails = document.createElement('p')
+  $messageDetails.classList.add('message-detail')
+  $messageDetails.textContent = `${messageTime} - ${messageDate}`
 
-  $infoMessage.append($user, $messageTime)
+  $infoMessage.append($user, $messageDetails)
   $listMessage.append($message, $infoMessage)
   $messages.append($listMessage)
 
+  if (Notification.permission === "granted") new Notification(`${user}`, { body: message, })
   $messages.scrollTop = $messages.scrollHeight
   socket.auth.serverOffset = lastRowId
 })

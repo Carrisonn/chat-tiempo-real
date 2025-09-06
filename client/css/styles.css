@@ -10,6 +10,11 @@ body {
   align-items: center;
 }
 
+hr {
+  width: 100%;
+  margin: 0;
+}
+
 .container {
   width: min(90%, 1200px);
   height: 100%;
@@ -30,6 +35,15 @@ body {
   background-color: #222121;
   border-radius: 4px;
   overflow: hidden;
+}
+
+.users-inchat {
+  width: fit-content;
+  margin: 0 auto 1rem auto;
+  padding: .5rem;
+  font-size: 20px;
+  border-radius: 4px;
+  background-color: cornflowerblue;
 }
 
 #messages {
@@ -70,12 +84,14 @@ body {
 }
 
 .user-state {
-  text-align: center;
+  width: fit-content;
   margin: 1rem auto;
+  padding: .5rem;
   background-color: cornflowerblue;
-  padding: .5rem 0;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: 20px;
+  text-wrap: balance;
+  text-align: center;
 }
 
 #form {
