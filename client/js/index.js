@@ -21,15 +21,16 @@ function getUserName() {
   if (userLogged) return userLogged
 
   const userName = prompt('¿Como te quieres identificar?')
-  const invalidName = userName === null || userName.trim() === '' || Number(userName)
-  if (invalidName) {
+  const isInvalidName = userName === null || userName.trim() === '' || Number(userName) || userName === undefined
+  if (isInvalidName) {
     alert('Debes introducir un nombre válido')
     window.location.reload()
     return
   }
 
-  localStorage.setItem('userName', userName)
-  return userName
+  const nameFormatted = formatName(userName)
+  localStorage.setItem('userName', nameFormatted)
+  return nameFormatted
 }
 
 function handleSubmit(event) {
@@ -37,9 +38,13 @@ function handleSubmit(event) {
 
   const inputValue = $input.value.trim()
   if (inputValue !== '') {
-    socket.emit('message', $input.value)
+    socket.emit('message', inputValue)
     $input.value = ''
   }
+}
+
+function formatName(name) {
+  return name.replace(/^\w/, char => char.toUpperCase())
 }
 
 // Socket Events
